@@ -5,39 +5,37 @@ interface IInteractable
 {
     public void Interact();
     public string GetHoverText();
+    public void DisableOutline();
+    public void EnableOutline();
 }
 
 public class Interactor : MonoBehaviour
 {
-    public Transform InteractorSource;
-    public float InteractRange = 3f;
-    public TMP_Text hoverText;
-
+    [SerializeField] private Transform _interactorSource;
+    [SerializeField] private float _interactRange = 3f;
+    [SerializeField] private TMP_Text _hoverTextLabel;
+    
     private IInteractable _prevInteractable;
-
-    void Start()
-    {
-        
-    }
 
     void LateUpdate()
     {
-        
-        Ray r = new Ray(InteractorSource.position, InteractorSource.forward);
+        Ray r = new Ray(_interactorSource.position, _interactorSource.forward);
 
         // Show hover text if ray hits with interactable object
-        if (Physics.Raycast(r, out RaycastHit hitInfo, InteractRange))
+        if (Physics.Raycast(r, out RaycastHit hitObj, _interactRange))
         {
-            if (hitInfo.collider.gameObject.TryGetComponent(out IInteractable interactObj))
+            if (hitObj.collider.gameObject.TryGetComponent(out IInteractable interactObj))
             {
-                // Only update label with object being interacted with changes
+                // Only update label and highlight when object being interacted with changes
                 if (interactObj != _prevInteractable)
                 {
-                    hoverText.text = interactObj.GetHoverText();
+                    interactObj.EnableOutline();
+
+                    _hoverTextLabel.text = interactObj.GetHoverText();
                     _prevInteractable = interactObj;
                 }
 
-                // Make object interact if E is pressed
+                // Press E to interact with object
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     interactObj.Interact();
@@ -50,7 +48,9 @@ public class Interactor : MonoBehaviour
         // Clear label if ray does not hit interactable object
         if (_prevInteractable != null)
         {
-            hoverText.text = "";
+            _prevInteractable.DisableOutline();
+
+            _hoverTextLabel.text = "";
             _prevInteractable = null;
         }
     }
