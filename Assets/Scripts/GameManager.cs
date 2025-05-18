@@ -41,17 +41,17 @@ public class GameManager : MonoBehaviour
 
     private void HandleFirst()
     {
-
+        
     }
 
     private void HandleSecond()
     {
-
+        
     }
 
     private void HandleThird()
     {
-
+        
     }
 
 

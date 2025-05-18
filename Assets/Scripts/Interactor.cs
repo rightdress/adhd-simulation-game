@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
 
 interface IInteractable
 {
@@ -7,6 +8,7 @@ interface IInteractable
     public string GetHoverText();
     public void DisableOutline();
     public void EnableOutline();
+    public void SetOutlineColor(Color color);
 }
 
 public class Interactor : MonoBehaviour
@@ -14,6 +16,7 @@ public class Interactor : MonoBehaviour
     [SerializeField] private Transform _interactorSource;
     [SerializeField] private float _interactRange = 3f;
     [SerializeField] private TMP_Text _hoverTextLabel;
+    private bool _canInteract = true;
     
     private IInteractable _prevInteractable;
 
@@ -38,7 +41,11 @@ public class Interactor : MonoBehaviour
                 // Press E to interact with object
                 if (Input.GetKeyDown(KeyCode.E))
                 {
-                    interactObj.Interact();
+                    if (_canInteract)
+                    {
+                        interactObj.Interact();
+                        StartCoroutine(FlashRedOutline(interactObj));
+                    }
                 }
 
                 return; // Prevent label from being cleared if ray hits interactable object
@@ -53,5 +60,17 @@ public class Interactor : MonoBehaviour
             _hoverTextLabel.text = "";
             _prevInteractable = null;
         }
+    }
+
+    public void UpdateCanInteract(bool canInteract)
+    {
+        _canInteract = canInteract;
+    }
+
+    private IEnumerator FlashRedOutline(IInteractable interactObj)
+    {
+        interactObj.SetOutlineColor(Color.red);
+        yield return new WaitForSeconds(3f);
+        interactObj.SetOutlineColor(Color.white);
     }
 }
