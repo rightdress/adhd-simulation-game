@@ -5,10 +5,14 @@ public class PlayerMovement : MonoBehaviour
     public float MoveSmoothTime;
     public float WalkSpeed;
     public float RunSpeed;
+    public float Gravity;
+    public float GroundSnapSpeed;
 
     private CharacterController _controller;
     private Vector3 _currentMoveVelocity;
     private Vector3 _moveDampVelocity;
+    private Vector3 _verticalVelocity;
+    private bool _isGrounded;
 
     void Start()
     {
@@ -16,6 +20,8 @@ public class PlayerMovement : MonoBehaviour
     }
     void Update()
     {
+        _isGrounded = _controller.isGrounded;
+
         Vector3 playerInput = new Vector3
         {
             x = Input.GetAxisRaw("Horizontal"),
@@ -38,6 +44,17 @@ public class PlayerMovement : MonoBehaviour
             MoveSmoothTime
         );
 
-        _controller.Move(_currentMoveVelocity * Time.deltaTime);
+        // Apply gravity or ground snapping if necessary
+        if (_isGrounded && _verticalVelocity.y < 0)
+        {
+            _verticalVelocity.y = -GroundSnapSpeed;
+        }
+        else
+        {
+            _verticalVelocity.y += Gravity * Time.deltaTime;
+        }
+
+        Vector3 fullMovement = _currentMoveVelocity + _verticalVelocity;    
+        _controller.Move(fullMovement * Time.deltaTime);
     }
 }
