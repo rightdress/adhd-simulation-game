@@ -5,22 +5,33 @@ using System.Collections;
 public class UIManager : MonoBehaviour
 {
     public TMP_Text StateLabel;
+    public TMP_Text HoverLabel;
     public TMP_Text DialogueLabel;
     public Interactor Interactor;
 
     void Awake()
     {
-        GameManager.OnGameStateChanged += GameManagerOnOnGameStateChanged;
+        GameManager.OnGameStateChanged += OnGameStateChanged;
     }
 
     void OnDestroy()
     {
-        GameManager.OnGameStateChanged -= GameManagerOnOnGameStateChanged;
+        GameManager.OnGameStateChanged -= OnGameStateChanged;
     }
 
-    private void GameManagerOnOnGameStateChanged(GameState state)
+    private void OnGameStateChanged(GameState state)
     {
         UpdateStateLabel(state.ToString());
+
+        switch (state)
+        {
+            case GameState.RegularFocus:
+                HoverLabel.gameObject.SetActive(true);
+                break;
+            case GameState.Hyperfocus:
+                HoverLabel.gameObject.SetActive(false);
+                break;
+        }
     }
 
     private void Start()

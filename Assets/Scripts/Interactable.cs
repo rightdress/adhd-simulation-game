@@ -10,20 +10,6 @@ public class Interactable : MonoBehaviour, IInteractable
     private Outline _outline;
     private int _currentIndexDialogue = 0;
 
-    void Awake() {
-        GameManager.OnGameStateChanged += GameManagerOnOnGameStateChanged;
-    }
-
-    void OnDestroy()
-    {
-        GameManager.OnGameStateChanged -= GameManagerOnOnGameStateChanged;
-    }
-
-    private void GameManagerOnOnGameStateChanged(GameState state)
-    {
-        //throw new System.NotImplementedException();
-    }
-
     void Start()
     {
         _outline = GetComponent<Outline>();
@@ -56,8 +42,10 @@ public class Interactable : MonoBehaviour, IInteractable
         _outline.enabled = true;
     }
 
+    /*
     public void SetOutlineColor(Color color)
     {
         _outline.OutlineColor = color;
     }
+    */
 }

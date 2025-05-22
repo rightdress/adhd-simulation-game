@@ -8,7 +8,7 @@ interface IInteractable
     public string GetHoverText();
     public void DisableOutline();
     public void EnableOutline();
-    public void SetOutlineColor(Color color);
+    //public void SetOutlineColor(Color color);
 }
 
 public class Interactor : MonoBehaviour
@@ -44,7 +44,7 @@ public class Interactor : MonoBehaviour
                     if (_canInteract)
                     {
                         interactObj.Interact();
-                        StartCoroutine(FlashRedOutline(interactObj));
+                        //StartCoroutine(FlashRedOutline(interactObj));
                     }
                 }
 
@@ -67,10 +67,12 @@ public class Interactor : MonoBehaviour
         _canInteract = canInteract;
     }
 
+    /*
     private IEnumerator FlashRedOutline(IInteractable interactObj)
     {
         interactObj.SetOutlineColor(Color.red);
         yield return new WaitForSeconds(3f);
         interactObj.SetOutlineColor(Color.white);
     }
+    */
 }

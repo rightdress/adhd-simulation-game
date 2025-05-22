@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        UpdateGameState(GameState.First);
+        UpdateGameState(GameState.RegularFocus);
     }
 
     public void UpdateGameState(GameState newState)
@@ -25,33 +25,25 @@ public class GameManager : MonoBehaviour
 
         switch (newState)
         {
-            case GameState.First:
-                HandleFirst();
+            case GameState.RegularFocus:
+                HandleRegularFocus();
                 break;
-            case GameState.Second:
-                HandleSecond();
-                break;
-            case GameState.Third:
-                HandleThird();
+            case GameState.Hyperfocus:
+                HandleHyperfocus();
                 break;
         }
 
         OnGameStateChanged?.Invoke(newState);
     }
 
-    private void HandleFirst()
+    private void HandleRegularFocus()
     {
-        
+        Debug.Log("Entered Regular Focus state");
     }
 
-    private void HandleSecond()
+    private void HandleHyperfocus()
     {
-        
-    }
-
-    private void HandleThird()
-    {
-        
+        Debug.Log("Entered Hyperfocus state");
     }
 
 
@@ -59,7 +51,6 @@ public class GameManager : MonoBehaviour
 
 public enum GameState
 {
-    First,
-    Second,
-    Third
+    RegularFocus,
+    Hyperfocus
 }

@@ -13,6 +13,17 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 _moveDampVelocity;
     private Vector3 _verticalVelocity;
     private bool _isGrounded;
+    private bool _canMove = true;
+
+    void Awake()
+    {
+        GameManager.OnGameStateChanged += OnGameStateChanged;
+    }
+
+    void OnDestroy()
+    {
+        GameManager.OnGameStateChanged -= OnGameStateChanged;
+    }
 
     void Start()
     {
@@ -20,6 +31,11 @@ public class PlayerMovement : MonoBehaviour
     }
     void Update()
     {
+        if (!_canMove)
+        {
+            return;
+        }
+
         _isGrounded = _controller.isGrounded;
 
         Vector3 playerInput = new Vector3
@@ -56,5 +72,18 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 fullMovement = _currentMoveVelocity + _verticalVelocity;    
         _controller.Move(fullMovement * Time.deltaTime);
+    }
+
+    private void OnGameStateChanged(GameState state)
+    {
+        switch (state)
+        {
+            case GameState.RegularFocus:
+                _canMove = true;
+                break;
+            case GameState.Hyperfocus:
+                _canMove = false;
+                break;
+        }
     }
 }
