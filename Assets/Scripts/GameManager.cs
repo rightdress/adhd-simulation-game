@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -8,6 +9,9 @@ public class GameManager : MonoBehaviour
     public GameState State;
 
     public static event Action<GameState> OnGameStateChanged;
+    public static event Action<string, string> OnChecklistItemCollected;
+
+    private Dictionary<string, string> _allChecklistItems = new Dictionary<string, string>();
 
     void Awake()
     {
@@ -46,7 +50,20 @@ public class GameManager : MonoBehaviour
         Debug.Log("Entered Hyperfocus state");
     }
 
+    public void CollectItem(string id, string displayName)
+    {
+        
+    }
 
+    public void RegisterChecklistItem(string id, string displayName)
+    {
+        // Add item to dictionary of checklist items
+        _allChecklistItems[id] = displayName;
+        OnChecklistItemCollected?.Invoke(id, displayName);
+
+        // Add checklist items to checklist in UI
+        UIManager.Instance.AddChecklistItem(id, displayName);
+    }
 }
 
 public enum GameState

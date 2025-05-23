@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class TrapItem : MonoBehaviour, IInteractable
 {
-    public UIManager UIManager;
-    public string HoverText = "";
+    public string HoverText;
     public DialogueSequence InternalDialogue;
     public Transform FocusPoint;
 
@@ -16,11 +15,22 @@ public class TrapItem : MonoBehaviour, IInteractable
     void Start()
     {
         _outline = GetComponent<Outline>();
+
+        // If outline hasn't been assigned, assign it
+        if (_outline == null)
+        {
+            _outline = gameObject.AddComponent<Outline>();
+        }
+
+        // Customize outline
+        _outline.OutlineWidth = 10f;
+
         DisableOutline();
     }
 
     public void Interact()
     {
+        UIManager.Instance.ShuffleChecklistItems();
         StartCoroutine(HyperfocusSequence());
     }
 
@@ -34,7 +44,7 @@ public class TrapItem : MonoBehaviour, IInteractable
 
         // Display dialogue
         // Dialogue is set to clear after 3 seconds in UIManager.cs
-        UIManager.UpdateDialogueLabel(InternalDialogue.lines[_currentIndexDialogue]);
+        UIManager.Instance.UpdateDialogueLabel(InternalDialogue.lines[_currentIndexDialogue]);
         _currentIndexDialogue = (_currentIndexDialogue + 1) % InternalDialogue.lines.Length;
 
         // Wait 3 seconds before updating game state
